@@ -33,3 +33,34 @@ def plot_hedging_result(pnl: list, label: str):
     plt.legend()
     plt.grid(True)
     plt.show()
+
+# ダミー関数例（実装は後で差し替える）
+def dummy_option_price(spot, strike, barrier, maturity_days, risk_free_rate, volatility):
+    return max(spot - strike, 0) if spot > barrier else 0
+
+def dummy_delta(spot, strike, barrier, maturity_days, risk_free_rate, volatility):
+    return 0.5  # 仮置き
+
+
+# Example usage
+if __name__ == "__main__":
+    df = pd.read_csv("data/usdjpy_fx_data.csv", index_col=0, parse_dates=True)
+    prices = df['USDJPY'].iloc[:30]
+
+    pnl_bs, final_bs = simulate_delta_hedge(
+        prices=prices,
+        strike=150,
+        maturity_days=30,
+        init_delta=0.5,
+        option_price_fn=dummy_option_price,
+        delta_fn=dummy_delta,
+        strike=150,
+        barrier=140,
+        maturity_days=30,
+        risk_free_rate=0.01,
+        volatility=0.15
+    )
+
+    plot_hedging_result(pnl_bs, label="BS Hedge")
+    print(f"Final PnL (BS): {final_bs:.4f}")
+
